@@ -31,10 +31,10 @@ defmodule EmqEventStore do
   def on_message_publish(message, _) do
     IO.inspect(["event_store on_message_publish", message])
 
-    message
-    |> Poison.decode!() # %{type: String, data: Map, aggregate_id: UUID}
-    |> Event.new()
-    |> Repo.insert!()
+    # message
+    # |> Poison.decode!() # %{type: String, data: Map, aggregate_id: UUID}
+    # |> Event.new()
+    # |> Repo.insert!()
 
     {:ok, message}
   end
