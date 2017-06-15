@@ -15,6 +15,8 @@
 ##--------------------------------------------------------------------
 
 defmodule EmqEventStore do
+  require Logger
+
   alias EmqEventStore.{
     Event,
     Repo
@@ -28,14 +30,15 @@ defmodule EmqEventStore do
     deregister_hook(:"message.publish", &on_message_publish/2)
   end
 
-  def on_message_publish(message, _) do
-    IO.inspect(["event_store on_message_publish", message])
-    :mqtt_message.format(message)
+  def on_message_publish({:mqtt_message, _, _, _, _, _, _, _, true, _, _, _} = message, _), do: {:ok, message}
+  def on_message_publish({:mqtt_message, _, _, _, topic, _, _, _, _, _, payload, timestamp} = message, _) do
+    Logger.debug("[emq_event_store] Topic: #{topic} Received: \n#{payload}")
 
-    # message
-    # |> Poison.decode!() # %{type: String, data: Map, aggregate_id: UUID}
-    # |> Event.new()
-    # |> Repo.insert!()
+    with {:ok, decoded} <- Poison.decode(message) do
+      decoded
+      |> Event.new()
+      |> Repo.insert!()
+    end
 
     {:ok, message}
   end

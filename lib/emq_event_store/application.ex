@@ -21,7 +21,7 @@ defmodule EmqEventStore.Application do
     import Supervisor.Spec, warn: false
 
     children = [
-
+      worker(EmqEventStore.Repo, [])
     ]
 
     opts = [strategy: :one_for_one, name: EmqEventStore.Supervisor]
