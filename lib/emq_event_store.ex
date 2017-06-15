@@ -34,8 +34,9 @@ defmodule EmqEventStore do
     Logger.debug("[emq_event_store] Topic: #{topic} Received: \n#{payload}")
 
     with {:ok, decoded} <- Poison.decode(payload) do
-      topic
-      |> Event.new(decoded)
+      decoded
+      |> Map.put("type", topic)
+      |> Event.new()
       |> Repo.insert!()
     end
 
