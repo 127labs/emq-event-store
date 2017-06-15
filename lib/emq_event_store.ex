@@ -14,6 +14,23 @@
 ## limitations under the License.
 ##--------------------------------------------------------------------
 
+EmqEventStore.on_message_publish(
+  {:mqtt_message,
+    <<0, 5, 82, 0, 2, 114, 67, 10, 198, 65, 0, 0, 6, 150, 0, 50>>,
+    :undefined,
+    :broker,
+    "$SYS/brokers/1f44767001aa@172.17.0.2/uptime",
+    0,
+    [],
+    false,
+    false,
+    true,
+    [],
+    "26 seconds",
+    {1497, 534878, 73616}},
+  []
+)
+
 defmodule EmqEventStore do
   require Logger
 
@@ -30,8 +47,7 @@ defmodule EmqEventStore do
     deregister_hook(:"message.publish", &on_message_publish/2)
   end
 
-  def on_message_publish({:mqtt_message, _, _, _, _, _, _, _, true, _, _, _} = message, _), do: {:ok, message}
-  def on_message_publish({:mqtt_message, _, _, _, topic, _, _, _, _, _, payload, timestamp} = message, _) do
+  def on_message_publish({:mqtt_message, _, _, _, topic, _, _, _, _, false, _, payload, _} = message, _) do
     Logger.debug("[emq_event_store] Topic: #{topic} Received: \n#{payload}")
 
     with {:ok, decoded} <- Poison.decode(message) do
@@ -42,6 +58,7 @@ defmodule EmqEventStore do
 
     {:ok, message}
   end
+  def on_message_publish(message, _), do: {:ok, message}
 
   defp register_hook(topic, callback, args) do
     :emqttd_hooks.add(topic, callback, args)
