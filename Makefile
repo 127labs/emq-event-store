@@ -3,6 +3,7 @@ PATH := $(CURDIR)/elixir/bin:$(PATH)
 
 
 all: elixir/lib/elixir/ebin/elixir.app
+	mix local.rebar --force
 	mix local.hex --force
 	mix deps.get
 	mix compile
