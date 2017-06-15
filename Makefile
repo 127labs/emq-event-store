@@ -11,6 +11,6 @@ all: elixir/lib/elixir/ebin/elixir.app
 
 elixir/lib/elixir/ebin/elixir.app:
 	git clone https://github.com/elixir-lang/elixir.git
-	(cd $(CURDIR)/elixir && git checkout tag/v1.4.4)
+	(cd $(CURDIR)/elixir && git checkout tags/v1.4.4)
 	echo "start to build elixir ..."
 	make -C elixir -f Makefile
