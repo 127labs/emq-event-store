@@ -1,0 +1,44 @@
+%%-*- mode: erlang -*-
+%% emq_event_store config mapping
+
+{mapping, "event_store.database.adapter", "emq_event_store.Elixir.EmqEventStore.Repo.adapter", [
+  {datatype, string}
+]}.
+
+{translation, "event_store.database.adapter", fun(Conf) ->
+  case cuttlefish:conf_get("event_store.database.adapter", Conf, undefined) of
+    "postgres" -> 'Elixir.Ecto.Adapters.Postgres';
+    _ -> cuttlefish:unset();
+  end
+end}.
+
+{mapping, "event_store.database", "emq_event_store.Elixir.EmqEventStore.Repo.database", [
+  {datatype, string}
+]}.
+
+{mapping, "event_store.database.username", "emq_event_store.Elixir.EmqEventStore.Repo.username", [
+  {datatype, string}
+]}.
+
+{mapping, "event_store.database.password", "emq_event_store.Elixir.EmqEventStore.Repo.password", [
+  {datatype, string}
+]}.
+
+{mapping, "event_store.database.hostname", "emq_event_store.Elixir.EmqEventStore.Repo.hostname", [
+  {datatype, string}
+]}.
+
+{mapping, "event_store.database.port", "emq_event_store.Elixir.EmqEventStore.Repo.port", [
+  {datatype, integer}
+]}.
+
+{mapping, "event_store.repos", "emq_event_store.ecto_repos", [
+  {default, "EmqEventStore.Repo"}
+  {datatype, string}
+]}.
+
+{translation, "event_store.repos", fun(Conf) ->
+  case cuttlefish:conf_get("event_store.repos", Conf, undefined) of
+    _ -> ['Elixir.EmqEventStore.Repo']
+  end
+end}.
