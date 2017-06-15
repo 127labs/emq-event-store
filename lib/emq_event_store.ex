@@ -14,23 +14,6 @@
 ## limitations under the License.
 ##--------------------------------------------------------------------
 
-EmqEventStore.on_message_publish(
-  {:mqtt_message,
-    <<0, 5, 82, 0, 2, 114, 67, 10, 198, 65, 0, 0, 6, 150, 0, 50>>,
-    :undefined,
-    :broker,
-    "$SYS/brokers/1f44767001aa@172.17.0.2/uptime",
-    0,
-    [],
-    false,
-    false,
-    true,
-    [],
-    "26 seconds",
-    {1497, 534878, 73616}},
-  []
-)
-
 defmodule EmqEventStore do
   require Logger
 
