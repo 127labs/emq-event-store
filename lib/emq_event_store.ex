@@ -33,9 +33,9 @@ defmodule EmqEventStore do
   def on_message_publish({:mqtt_message, _, _, _, topic, _, _, _, _, false, _, payload, _} = message, _) do
     Logger.debug("[emq_event_store] Topic: #{topic} Received: \n#{payload}")
 
-    with {:ok, decoded} <- Poison.decode(message) do
-      decoded
-      |> Event.new()
+    with {:ok, decoded} <- Poison.decode(payload) do
+      topic
+      |> Event.new(decoded)
       |> Repo.insert!()
     end
 

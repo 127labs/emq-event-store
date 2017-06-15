@@ -1,44 +1,63 @@
 %%-*- mode: erlang -*-
 %% emq_event_store config mapping
 
-{mapping, "event_store.database.adapter", "emq_event_store.Elixir.EmqEventStore.Repo.adapter", [
+{mapping, "event_store.adapter", "emq_event_store", [
   {datatype, string}
 ]}.
 
-{translation, "event_store.database.adapter", fun(Conf) ->
-  case cuttlefish:conf_get("event_store.database.adapter", Conf, undefined) of
-    "postgres" -> 'Elixir.Ecto.Adapters.Postgres';
-    _ -> cuttlefish:unset();
-  end
-end}.
-
-{mapping, "event_store.database", "emq_event_store.Elixir.EmqEventStore.Repo.database", [
+{mapping, "event_store.database", "emq_event_store", [
   {datatype, string}
 ]}.
 
-{mapping, "event_store.database.username", "emq_event_store.Elixir.EmqEventStore.Repo.username", [
+{mapping, "event_store.username", "emq_event_store", [
   {datatype, string}
 ]}.
 
-{mapping, "event_store.database.password", "emq_event_store.Elixir.EmqEventStore.Repo.password", [
+{mapping, "event_store.password", "emq_event_store", [
   {datatype, string}
 ]}.
 
-{mapping, "event_store.database.hostname", "emq_event_store.Elixir.EmqEventStore.Repo.hostname", [
+{mapping, "event_store.hostname", "emq_event_store", [
   {datatype, string}
 ]}.
 
-{mapping, "event_store.database.port", "emq_event_store.Elixir.EmqEventStore.Repo.port", [
+{mapping, "event_store.port", "emq_event_store", [
   {datatype, integer}
 ]}.
 
-{mapping, "event_store.repos", "emq_event_store.ecto_repos", [
-  {default, "EmqEventStore.Repo"}
-  {datatype, string}
-]}.
-
-{translation, "event_store.repos", fun(Conf) ->
-  case cuttlefish:conf_get("event_store.repos", Conf, undefined) of
-    _ -> ['Elixir.EmqEventStore.Repo']
-  end
+{translation, "emq_event_store", fun(Conf) ->
+  [{'Elixir.EmqEventStore.Repo', [
+       case cuttlefish:conf_get("event_store.adapter", Conf, undefined) of
+         undefined -> cuttlefish:unset();
+         "postgres" -> {adapter, 'Elixir.Ecto.Adapters.Postgres'}
+       end,
+       case cuttlefish:conf_get("event_store.database", Conf, undefined) of
+         undefined -> cuttlefish:unset();
+         Database -> {database, Database}
+       end,
+       case cuttlefish:conf_get("event_store.username", Conf, undefined) of
+         undefined -> cuttlefish:unset();
+         Username -> {username, Username}
+       end,
+       case cuttlefish:conf_get("event_store.password", Conf, undefined) of
+         undefined -> cuttlefish:unset();
+         Password -> {password, Password}
+       end,
+       case cuttlefish:conf_get("event_store.hostname", Conf, undefined) of
+         undefined -> cuttlefish:unset();
+         Hostname -> {hostname, Hostname}
+       end,
+       case cuttlefish:conf_get("event_store.port", Conf, undefined) of
+         undefined -> cuttlefish:unset();
+         Port -> {port, Port}
+       end
+    ]},
+   {ecto_repos, ['Elixir.EmqEventStore.Repo']}
+  ]
 end}.
+
+
+
+
+
+

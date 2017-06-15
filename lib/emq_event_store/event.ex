@@ -14,7 +14,12 @@ defmodule EmqEventStore.Event do
     timestamps(updated_at: false)
   end
 
-  def new(attributes) do
+  def new(event, payload) do
+    attributes =
+      Map.new
+      |> Map.put(:type, event)
+      |> Map.put(:data, payload)
+
     __MODULE__
     |> struct()
     |> changeset(attributes)
