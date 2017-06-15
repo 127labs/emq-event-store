@@ -28,3 +28,13 @@ use Mix.Config
 # here (which is why it is important to import them last).
 #
 #     import_config "#{Mix.env}.exs"
+
+config :emq_event_store, EmqEventStore.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  database: "emq_event_store_#{Mix.env}",
+  username: "postgres",
+  password: "postgres",
+  hostname: "localhost",
+  port: 5432
+
+config :emq_event_store, ecto_repos: [EmqEventStore.Repo]

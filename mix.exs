@@ -1,11 +1,11 @@
-defmodule EmqElixirPlugin.Mixfile do
+defmodule EmqEventStore.Mixfile do
   use Mix.Project
 
   def project do
     [
-      app: :emq_elixir_plugin,
+      app: :emq_event_store,
       version: "2.2.0",
-      elixir: "~> 1.5-dev",
+      elixir: "~> 1.4",
       start_permanent: Mix.env == :prod,
       deps: deps()
     ]
@@ -15,13 +15,14 @@ defmodule EmqElixirPlugin.Mixfile do
   def application do
     [
       extra_applications: [:logger],
-      mod: {EmqElixirPlugin, []}
+      mod: {EmqEventStore.Application, []}
     ]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
-    [
-    ]
+    [{:poison, "~> 3.1"},
+     {:postgrex, ">= 0.0.0"},
+     {:ecto, "~> 2.1"}]
   end
 end

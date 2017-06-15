@@ -14,18 +14,24 @@
 ## limitations under the License.
 ##--------------------------------------------------------------------
 
-defmodule EmqElixirPlugin.Supervisor do
-  # Automatically imports Supervisor.Spec
-  use Supervisor
+defmodule EmqEventStore.Application do
+  use Application
 
-  def start_link do
-    Supervisor.start_link(__MODULE__, [])
+  def start(_, _) do
+    import Supervisor.Spec, warn: false
+
+    children = [
+
+    ]
+
+    opts = [strategy: :one_for_one, name: EmqEventStore.Supervisor]
+
+    EmqEventStore.load([])
+
+    Supervisor.start_link(children, opts)
   end
 
-  def init([]) do
-    children = []
-
-    # supervise/2 is imported from Supervisor.Spec
-    supervise(children, strategy: :one_for_one)
+  def stop(_) do
+    EmqEventStore.unload()
   end
 end

@@ -15,18 +15,36 @@
 ##--------------------------------------------------------------------
 
 
-defmodule EmqElixirPlugin do
-  use Application
-  
-    def start(_type, _args) do
-        EmqElixirPlugin.Body.load([])
-        
-        # start a dummy supervisor
-        EmqElixirPlugin.Supervisor.start_link()
-    end
-  
-    def stop(_app) do
-        EmqElixirPlugin.Body.unload()
-    end
+defmodule EmqEventStore do
+  alias EmqEventStore.{
+    Event,
+    Repo
+  }
 
+  defp register_hook(topic, callback, args) do
+    :emqttd_hooks.add(topic, callback, args)
+  end
+
+  defp deregister_hook(topic, callback) do
+    :emqttd_hooks.delete(topic, callback)
+  end
+
+  def load(env) do
+    register_hook(:"message.publish", &on_message_publish/2, [env])
+  end
+
+  def unload do
+    deregister_hook(:"message.publish", &on_message_publish/2. [env])
+  end
+
+  def on_message_publish(message, _) do
+    IO.inspect(["event_store on_message_publish", message])
+
+    message
+    |> Poison.decode!() # %{type: String, data: Map, aggregate_id: UUID}
+    |> Event.new()
+    |> Repo.insert!()
+
+    {:ok, message}
+  end
 end
