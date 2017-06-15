@@ -24,6 +24,6 @@ defmodule EmqEventStore.Mixfile do
     [{:poison, "~> 3.1"},
      {:postgrex, ">= 0.0.0"},
      {:ecto, "~> 2.1"},
-     {:distillery, "~> 1.4"}]
+     {:conform, "~> 2.3.3"}]
   end
 end
