@@ -31,7 +31,7 @@ use Mix.Config
 
 config :emq_event_store, EmqEventStore.Repo,
   adapter: Ecto.Adapters.Postgres,
-  database: "emq_event_store_#{Mix.env}",
+  database: "emq_event_store",
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
