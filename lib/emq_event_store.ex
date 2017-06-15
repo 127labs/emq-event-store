@@ -30,6 +30,7 @@ defmodule EmqEventStore do
 
   def on_message_publish(message, _) do
     IO.inspect(["event_store on_message_publish", message])
+    :mqtt_message.format(message)
 
     # message
     # |> Poison.decode!() # %{type: String, data: Map, aggregate_id: UUID}
