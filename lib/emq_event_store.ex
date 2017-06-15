@@ -14,27 +14,18 @@
 ## limitations under the License.
 ##--------------------------------------------------------------------
 
-
 defmodule EmqEventStore do
   alias EmqEventStore.{
     Event,
     Repo
   }
 
-  defp register_hook(topic, callback, args) do
-    :emqttd_hooks.add(topic, callback, args)
-  end
-
-  defp deregister_hook(topic, callback) do
-    :emqttd_hooks.delete(topic, callback)
-  end
-
   def load(env) do
     register_hook(:"message.publish", &on_message_publish/2, [env])
   end
 
   def unload do
-    deregister_hook(:"message.publish", &on_message_publish/2. [env])
+    deregister_hook(:"message.publish", &on_message_publish/2)
   end
 
   def on_message_publish(message, _) do
@@ -46,5 +37,13 @@ defmodule EmqEventStore do
     |> Repo.insert!()
 
     {:ok, message}
+  end
+
+  defp register_hook(topic, callback, args) do
+    :emqttd_hooks.add(topic, callback, args)
+  end
+
+  defp deregister_hook(topic, callback) do
+    :emqttd_hooks.delete(topic, callback)
   end
 end
